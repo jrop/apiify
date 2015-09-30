@@ -1,0 +1,27 @@
+{
+  "name": "apiify",
+  "version": "1.0.0",
+  "description": "A library for serving APIs through express",
+  "main": "index.js",
+  "scripts": {
+    "clean": "gulp clean",
+    "build": "gulp",
+    "prepublish": "gulp"
+  },
+  "author": "Jonathan Apodaca",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.2.1",
+    "gulp-print": "^2.0.1",
+    "gulp-util": "^3.0.6",
+    "rimraf": "^2.4.3"
+  },
+  "dependencies": {
+    "babel-runtime": "^5.8.25",
+    "body-parser": "^1.14.1",
+    "express": "^4.13.3",
+    "promised-xhr": "^1.2.0"
+  },
+  "repository": "jrop/apiify"
+}
