@@ -1,6 +1,6 @@
 {
   "name": "apiify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library for serving APIs through express",
   "main": "index.js",
   "scripts": {
@@ -20,8 +20,7 @@
   "dependencies": {
     "babel-runtime": "^5.8.25",
     "body-parser": "^1.14.1",
-    "express": "^4.13.3",
-    "promised-xhr": "^1.2.0"
+    "express": "^4.13.3"
   },
   "repository": "jrop/apiify"
 }
