@@ -1,3 +1,31 @@
+//
+// creates an object-based API based on the passed in 'spec'
+// for each leaf in the spec, attache a function returned by the makeMethodClientFactory
+// spec follows the structure of jDir found in index.js
+//
+function makeFromSpec(spec, makeMethodClientFactory, currObj = '') {
+	let api = { }
+	for (let fn of spec) {
+		let t = typeof fn
+		switch (t) {
+		case 'string':
+			let fnPath = currObj == '' ? fn : currObj + '.' + fn
+			api[fn] = makeMethodClientFactory(fnPath)
+			break
+		case 'object':
+			for (let mbr in fn) {
+				let objPath = currObj == '' ? mbr : currObj + '.' + mbr
+				api[mbr] = makeFromSpec(fn[mbr], makeMethodClientFactory, objPath)
+			}
+			break
+		}
+	}
+	return api
+}
+
+//
+// Promise XHR
+//
 function xhr(method, url, data) {
 	return new Promise((yes, no) => {
 		let xhr = new XMLHttpRequest()
@@ -26,17 +54,23 @@ function xhr(method, url, data) {
 	})
 }
 
+//
+// This function creates the API
+//
 export default async function apiClient(base) {
 	function invoke(nm, ...args) {
 		return xhr('POST', base + '/' + nm, args)
 	}
 
-	let fns = await xhr('GET', base)
-	for (let f of fns) {
-		invoke[f] = function(...args) {
-			return invoke(f, ...args)
+	let spec = await xhr('GET', base)
+	let api = makeFromSpec(spec, function(fn) {
+		return function(...args) {
+			return invoke(fn, ...args)
 		}
-	}
+	})
+
+	for (let mbr in api)
+		invoke[mbr] = api[mbr]
 
 	return invoke
 }
