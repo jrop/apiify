@@ -9,6 +9,9 @@ var gutil = require('gulp-util')
 // Server JS
 var babel = require('gulp-babel')
 
+// Client JS
+var webpack = require('webpack')
+
 // Other
 var print = require('gulp-print')
 var rimraf = require('rimraf')
@@ -20,12 +23,26 @@ function tellerror(err) {
 
 gulp.task('default', [ 'js' ])
 
-gulp.task('js', function() {
-	return gulp.src('src/**/*.js')
+gulp.task('js', [ 'client-js' ], function() {
+	return gulp.src([ 'src/index.js', 'src/test.js' ])
 		.pipe(print())
 		.pipe(babel({ stage: 1, optional: [ 'runtime' ] }))
 		.on('error', tellerror)
 		.pipe(gulp.dest('build'))
+})
+
+var clientJsCompiler = webpack(require('./webpack.config.js'))
+gulp.task('client-js', function(cb) {
+	clientJsCompiler.run(function(err, stats) {
+		if (err) throw new gutil.PluginError('client-js', err);
+		gutil.log('client-js', stats.toString({
+			colors: true,
+			chunks: false,
+			version: false,
+			timings: false
+		}))
+		cb()	
+	})
 })
 
 gulp.task('watch', [ 'default' ], function() {

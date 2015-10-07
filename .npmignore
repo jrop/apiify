@@ -1,3 +1,5 @@
 src/
 .gitignore
 gulpfile.js
+
+build/test.js

@@ -67,7 +67,7 @@ Where `methods` is a dictionary (object) of functions.  Functions in this dictio
 API of apiify/client (browser-module)
 =====================================
 
-For this release, the only way to use this module is to `require` it in (e.g., you will need to use a tool like Webpack/browserify/etc. to bundle it with your app).  It exports one function with the following signature:
+The preferred way to use this module is to `require` it in (e.g., you will need to use a tool like Webpack/browserify/etc. to bundle it with your app).  When requiring, It exports one function with the following signature:
 
 ```
 async apiClient(baseUrl) : ApiClient
@@ -89,6 +89,24 @@ An `ApiClient` is a function with the following signature:
 
 ```
 async function(methodName, ...args) : Any
+```
+
+## Including with `<script ...></script>`
+
+To include the client-side API using HTML script tags, just download and include the `build/client.js` file in this repository (available after building the source).  When included, the `async apiClient(baseUrl) : ApiClient` function (discussed above) is accessible via `apiify.client(...)`.  For example:
+
+```
+<script src="/path/to/client.js"></script>
+<script>
+apiify.client('/api')
+.then(function(api) {
+  // now use 'api' like, for example:
+  api.sayHello()
+  .then(function(msg) {
+    console.log(msg)
+  })
+})
+</script>
 ```
 
 License
