@@ -1,1 +1,1 @@
-module.exports = require('../build/client.js')
+module.exports = require('../build/client-include.js')

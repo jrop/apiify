@@ -1,13 +1,13 @@
 var webpack = require('webpack')
 
 module.exports = {
-	devtool: 'inline-source-map',
+	// devtool: 'inline-source-map',
 	entry: {
-		client: './src/client.js'
+		client: './src/client-include.js'
 	},
 	output: {
 		path: './build',
-		filename: '[name].js',
+		filename: 'client.js',
 		chunkFilename: '[id].js'
 	},
 	module: {

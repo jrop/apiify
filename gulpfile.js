@@ -24,7 +24,7 @@ function tellerror(err) {
 gulp.task('default', [ 'js' ])
 
 gulp.task('js', [ 'client-js' ], function() {
-	return gulp.src([ 'src/index.js', 'src/test.js' ])
+	return gulp.src([ 'src/**/*.js' ])
 		.pipe(print())
 		.pipe(babel({ stage: 1, optional: [ 'runtime' ] }))
 		.on('error', tellerror)

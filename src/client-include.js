@@ -49,12 +49,11 @@ async function apiClient(base) {
 	return invoke
 }
 export default apiClient
+export { apiClient }
 
 try {
 	window.apiify = { client: apiClient }
-} catch (e) {
-	console.error(e)
-}
+} catch (e) { }
 
 //
 // example:
