@@ -16,6 +16,12 @@ function xhrp(method, url, data) {
 		}, (err, resp, body) => {
 			if (err) return no(err)
 
+			if (resp.statusCode < 200 || resp.statusCode > 299) {
+				// error HTTP-status code
+				try { no(JSON.parse(body)) }
+				catch (e) { no(body) }
+			}
+
 			try {
 				yes(JSON.parse(body))
 			} catch (e) {
