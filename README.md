@@ -10,10 +10,12 @@ import express from 'express'
 let app = express()
 app.use('/api', apiify({
   sayHello(name = 'World') {
+    // `this` in this context is the request object
     return 'Hello ' + name
   },
 
   delayed() {
+    // `this` in this context is the request object
     return Promise((yes, no) => {
         setTimeout(() => yes('All done')), 1000)
     })
@@ -62,7 +64,7 @@ The apiify server-side library has one, default export with the following signat
 function apiify(methods) : express.Router
 ```
 
-Where `methods` is a dictionary (object) of functions.  Functions in this dictionary may (if chosen) return promises (if they're asynchronous in nature).
+Where `methods` is a dictionary (object) of functions.  Functions in this dictionary may (if chosen) return promises (if they're asynchronous in nature).  Each method will have its `this` variable bound to the current request object when called.
 
 API of apiify/client (browser-module)
 =====================================

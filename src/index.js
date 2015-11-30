@@ -15,7 +15,7 @@ export default function apiify(obj) {
 
 		try {
 			if (typeof fn == 'function') {
-				let result = await fn(...args)
+				let result = await fn.apply(req, args)
 				res.json(result)
 			} else
 				throw new Error('Function \'' + req.params.fn + '\' not found in API: ' + req.originalUrl)

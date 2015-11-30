@@ -19,7 +19,8 @@ function xhrp(method, url, data) {
 			try {
 				yes(JSON.parse(body))
 			} catch (e) {
-				no({ error: 'Invalid data recieved from API call: ' + url })
+				e = new Error('Invalid data recieved from API call: ' + url)
+				no({ message: e.message, stack: e.stack })
 			}
 		})
 	})
