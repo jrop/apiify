@@ -51,7 +51,7 @@ gulp.task('client-js', function(cb) {
 		.pipe(insert.append(`
 if (typeof window != 'undefined')
 	window.apiify = { client: __output.default }
-else if (typeof module != 'undefined' && typeof module.exports != 'undefined')
+if (typeof module != 'undefined' && typeof module.exports != 'undefined')
 	module.exports = __output
 `))
 		.pipe(rename('client.js'))
