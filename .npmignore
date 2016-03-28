@@ -1,5 +1,6 @@
 src/
-.gitignore
-gulpfile.js
-
 build/test.js
+gulpfile.js
+.babelrc
+.gitignore
+

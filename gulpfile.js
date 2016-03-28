@@ -10,10 +10,12 @@ var gutil = require('gulp-util')
 var babel = require('gulp-babel')
 
 // Client JS
-var webpack = require('webpack')
+var named = require('vinyl-named')
+var insert = require('gulp-insert')
+var rename = require('gulp-rename')
+var webpack = require('webpack-stream')
 
 // Other
-var print = require('gulp-print')
 var rimraf = require('rimraf')
 
 function tellerror(err) {
@@ -21,28 +23,39 @@ function tellerror(err) {
 	this.emit('end')
 }
 
-gulp.task('default', [ 'js' ])
+gulp.task('default', [ 'js', 'client-js' ])
 
-gulp.task('js', [ 'client-js' ], function() {
-	return gulp.src([ 'src/**/*.js' ])
-		.pipe(print())
-		.pipe(babel({ stage: 1, optional: [ 'runtime' ] }))
+gulp.task('js', function() {
+	return gulp.src([ 'src/{index,test}.js' ])
+		.pipe(babel())
 		.on('error', tellerror)
 		.pipe(gulp.dest('build'))
 })
 
-var clientJsCompiler = webpack(require('./webpack.config.js'))
 gulp.task('client-js', function(cb) {
-	clientJsCompiler.run(function(err, stats) {
-		if (err) throw new gutil.PluginError('client-js', err);
-		gutil.log('client-js', stats.toString({
-			colors: true,
-			chunks: false,
-			version: false,
-			timings: false
-		}))
-		cb()	
-	})
+	return gulp.src('src/client.js')
+		.pipe(named())
+		.pipe(webpack({
+			output: {
+				library: '__output',
+				libraryTarget: 'var'
+			},
+			module: {
+				loaders: [{
+					test: /\.js$/,
+					exclude: /node_modules/,
+					loader: 'babel',
+				}]
+			}
+		})).on('error', e => console.error(e.stack))
+		.pipe(insert.append(`
+if (typeof window != 'undefined')
+	window.apiify = { client: __output.default }
+else if (typeof module != 'undefined' && typeof module.exports != 'undefined')
+	module.exports = __output
+`))
+		.pipe(rename('client.js'))
+		.pipe(gulp.dest('build'))
 })
 
 gulp.task('watch', [ 'default' ], function() {

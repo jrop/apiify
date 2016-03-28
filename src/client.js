@@ -35,32 +35,30 @@ function xhrp(method, url, data) {
 //
 // This function creates the API
 //
-async function apiClient(base) {
+function apiClient(base) {
 	function invoke(nm, ...args) {
 		return xhrp('POST', base + '/' + nm, args)
 	}
 
-	let spec = await xhrp('GET', base) // array of function names (like [ 'fn1', 'x.y.fn2', ... ])
-	let methods = { }
-	for (let fn of spec) {
-		methods[fn] = function(...args) {
-			return invoke(fn, ...args)
+	return xhrp('GET', base) // array of function names (like [ 'fn1', 'x.y.fn2', ... ])
+	.then(function (spec) {
+		let methods = { }
+		for (let fn of spec) {
+			methods[fn] = function(...args) {
+				return invoke(fn, ...args)
+			}
 		}
-	}
-	// methods now looks like
-	methods = unflatten(methods)
+		// methods now looks like
+		methods = unflatten(methods)
 
-	for (let mbr in methods)
-		invoke[mbr] = methods[mbr]
+		for (let mbr in methods)
+			invoke[mbr] = methods[mbr]
 
-	return invoke
+		return invoke
+	})
 }
 export default apiClient
 export { apiClient }
-
-try {
-	window.apiify = { client: apiClient }
-} catch (e) { }
 
 //
 // example:

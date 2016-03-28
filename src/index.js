@@ -1,27 +1,30 @@
 import bodyParser from 'body-parser'
 import flatten from 'flat'
-import { Router } from 'express'
+import router from 'router'
 
 export default function apiify(obj) {
 	let spec = flatten(obj)
 
-	return Router()
+	return router()
 
-	.post('/:fn', bodyParser.json(), async function (req, res) {
+	.post('/:fn', bodyParser.json(), function (req, res) {
 		let fn = spec[req.params.fn]
 		let args = req.body
 		if (!Array.isArray(args))
 			args = [ args ]
 
-		try {
-			if (typeof fn == 'function') {
-				let result = await fn.apply(req, args)
-				res.json(result)
-			} else
-				throw new Error('Function \'' + req.params.fn + '\' not found in API: ' + req.originalUrl)
-		} catch (e) {
+		function err(e) {
 			res.status(500).json({ message: e.message })
 		}
+
+		if (typeof fn == 'function') {
+			Promise.resolve(fn.apply(req, args))
+			.then(function (result) {
+				res.json(result)
+			})
+			.catch(err)
+		} else
+			err(new Error('Function \'' + req.params.fn + '\' not found in API: ' + req.originalUrl))
 	})
 
 	.get('/', function(req, res) {

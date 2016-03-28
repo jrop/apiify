@@ -24,6 +24,7 @@ app.get('/', (req, res) => res.end(`
 <script>
 apiify.client('/api')
 .then(api => {
+	console.log(api)
 	api.sayHello()
 	.then(msg => console.log(msg))
 	.then(() => api.admin.sayHello())
