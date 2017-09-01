@@ -1,6 +1,8 @@
 API-ify
 =======
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/jrop/apiify.svg)](https://greenkeeper.io/)
+
 This helper library lets you easily create express-driven APIs that you can call easily on the client side.  For example, on the server you create the code to be API-ified (this sample is written in ES6/7: it makes use of ES7's `async`/`await` functionality):
 
 ```
